@@ -16,6 +16,12 @@ var request = require("request");
 // axios
 var axios = require("axios");
 
+// moment
+var moment = require('moment');
+
+// run text file
+var fs = require("fs");
+
 // Artist name function
 var getArtistNames = function(artist) {
   return artist.name;
@@ -77,9 +83,48 @@ axios.get(queryUrl).then(
     console.log("Language: " + response.data.Language);
     console.log("Plot: " + response.data.Plot);
     console.log("Actors: " + response.data.Actors);
+    console.log("===================================")
   }
 );
 };
+
+// Bands in Town 
+if (process.argv[2] == 'concert-this' ) {
+   
+  var artist = process.argv.slice(3).join(" ")
+  console.log(artist);
+ 
+  var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
+
+  request(queryURL, function (error, response, body) {
+      if (error) console.log(error);
+      var result  =  JSON.parse(body)[0];
+      // console.log(response);
+      console.log("Venue name: " + result.venue.name);
+      console.log("Venue location: " + result.venue.city);
+      console.log("Date of Event: " +  moment(result.datetime).format("MM/DD/YYYY"));
+      console.log("====================================");
+     
+
+  
+  });
+}
+// do what it says
+var doWhatItSays = function() {
+  fs.readFile("random.txt", "utf8", function(error, data) {
+    console.log(data);
+
+    var dataArr = data.split(",");
+
+    if (dataArr.length === 2) {
+      pick(dataArr[0], dataArr[1]);
+    }
+    else if (dataArr.length === 1) {
+      pick(dataArr[0]);
+    }
+  });
+};
+
 
 // execute with switch and case 
 var pick = function(caseData, functionData) {
@@ -90,6 +135,11 @@ var pick = function(caseData, functionData) {
         case "movie-this":
             movieThis();
             break;
+        case "concert-this":
+        break;
+        case "do-what-it-says":
+            doWhatItSays();
+        break;
         default:
         console.log('LIRI does not know that');
     }
