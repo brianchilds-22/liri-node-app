@@ -54,7 +54,10 @@ var getMeSpotify = function (songName) {
 };
 
 // OMDB
-var movieThis = function () {
+var movieThis = function (movieTitle) {
+  if (movieTitle === undefined) {
+    movieTitle = "Mr.Nobody";
+  }
   var nodeArgs = process.argv;
   var movieName = "";
   for (var i = 3; i < nodeArgs.length; i++) {
